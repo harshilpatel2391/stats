@@ -1,13 +1,12 @@
 import fs from "fs";
+import { DataReader } from "./MatchReader";
 
-export abstract class CSVFileReader<TypeOfData> {
-    data: TypeOfData[] = [];
+export class CSVFileReader implements DataReader {
+    data: string[][] = [];
     filename: string;
     constructor(filename: string) {
         this.filename = filename;
     }
-
-    abstract mapRow(row: string[]): TypeOfData;
 
     read(): void {
         this.data = fs.readFileSync(this.filename, {
@@ -15,7 +14,6 @@ export abstract class CSVFileReader<TypeOfData> {
         }).split("\n")
         .map((row: string): string[] => {
             return row.split(",");
-        })
-        .map(this.mapRow);
+        });
     }
 }
